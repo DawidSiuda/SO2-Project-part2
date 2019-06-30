@@ -22,7 +22,7 @@ std::mutex mutexBallsVectorCheckingCollizions;
 
 struct BallWithOwnThread
 {
-    BallWithOwnThread( const std::atomic<bool> * const pauseFlag, float posX, float posY, float r, float movX, float movY)
+    BallWithOwnThread( const std::atomic<bool> * pauseFlag, float posX, float posY, float r, float movX, float movY)
     {
         ball = new Ball( posX, posY, r, movX, movY);
         thread = new std::thread(&Ball::calculateNevCoordinate, ball, pauseFlag);
@@ -43,7 +43,7 @@ std::vector<BallWithOwnThread*> balls;
 
 void checkCollisions(std::vector<BallWithOwnThread*> * const balls)
 {
-    while(1) // <-- to change should be pause and exit
+    while(myPause == false )
     {
         mutexBallsVectorCheckingCollizions.lock();
 
@@ -237,6 +237,20 @@ void keyboard(unsigned char key, int x, int y)
 
 int main(int argc, char** argv)
 {
+
+    // balls.back()->thread->
+    // bool costam;
+
+    // std::mutex m1;
+
+    // m1.lock();
+    // costam = false;
+    // m1.unlock();
+
+
+    // bool dupa = myPause.load();
+    // myPause.store(true);
+
     std::cout << "Process id : " << getpid() << std::endl;
 
     std::thread *threadCheckingCollizion = new std::thread(&checkCollisions, &balls);

@@ -9,6 +9,7 @@
 #include <chrono>
 #include <atomic>
 #include <mutex>
+#include <condition_variable>
 
 #include "structures.h"
 
@@ -57,14 +58,16 @@ class Ball
     void setFrozze()
     {
         isFrozen.store(true);
+        condition_variableFreeze.notify_all();
     }
 
     void setDefrozze()
     {
         isFrozen.store(false);
+        condition_variableFreeze.notify_all();
     }
 
-    int calculateNevCoordinate(const std::atomic<bool> * const pause);
+    int calculateNevCoordinate( const std::atomic<bool> * pause);// const std::atomic<bool> * const pause);
 
     static int handleCillizion(Ball *firstBall, Ball *secondBall);
 
@@ -90,6 +93,8 @@ private:
     void setRandomDirectionVertex();
 
     std::mutex mutexChangingDirectionVector;
+
+    std::condition_variable condition_variableFreeze;
 };
 
 #endif //BALL_H
